@@ -47,6 +47,14 @@ namespace Gamba.Tests.Games
         }
 
         [Test]
+        public void GetNextDraw_CallsRandom()
+        {
+            var result = _roulette.GetNextDraw();
+
+            _randomMock.Verify(r => r.Next(1, 26));
+        }
+
+        [Test]
         public void GetWinReturn_InvalidDraw_ThrowsException()
         {
             Assert.Throws<ArgumentOutOfRangeException>(() => _roulette.GetWinReturn(0));
@@ -60,7 +68,7 @@ namespace Gamba.Tests.Games
 
             for (var i = 0; i < draws.Count(); i++)
             {
-                var result = _roulette.GetWinReturn(draws[0]);
+                var result = _roulette.GetWinReturn(draws[i]);
 
                 Assert.That(result, Is.EqualTo(results[i]), $"i: {i} Draw: {draws[i]} - Result: {result}", new int[] { draws[i] });
             }
