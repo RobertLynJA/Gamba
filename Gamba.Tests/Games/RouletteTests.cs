@@ -45,5 +45,25 @@ namespace Gamba.Tests.Games
                 Assert.That(result, Is.EqualTo(results[i]), $"i: {i} Random: {randomValue[i]} - Result: {result}", new int[] { randomValue[i] });
             }
         }
+
+        [Test]
+        public void GetWinReturn_InvalidDraw_ThrowsException()
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() => _roulette.GetWinReturn(0));
+        }
+
+        [Test]
+        public void GetWinReturn_Draw_ReturnsResult()
+        {
+            var draws = new int[] { 1, 3, 5, 10, 20 };
+            var results = new int[] { 2, 4, 6, 11, 21 };
+
+            for (var i = 0; i < draws.Count(); i++)
+            {
+                var result = _roulette.GetWinReturn(draws[0]);
+
+                Assert.That(result, Is.EqualTo(results[i]), $"i: {i} Draw: {draws[i]} - Result: {result}", new int[] { draws[i] });
+            }
+        }
     }
 }

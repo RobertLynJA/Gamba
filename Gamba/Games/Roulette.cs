@@ -34,5 +34,24 @@ namespace Gamba.Games
 
             throw new Exception("should never happen");
         }
+
+        public int GetWinReturn(int draw)
+        {
+            switch (draw)
+            {
+                case 1:
+                    return 2;
+                case 3:
+                    return 4;
+                case 5:
+                    return 6;
+                case 10:
+                    return 11;
+                case 20:
+                    return 21;
+            }
+
+            throw new ArgumentOutOfRangeException($"{nameof(draw)} is not a valid draw");
+        }
     }
 }
