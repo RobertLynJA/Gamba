@@ -27,7 +27,6 @@ namespace Gamba
 
                 if (bet > roulette.Wallet)
                 {
-                    Console.WriteLine($"{bet} {roulette.Wallet}");
                     break;
                 }
 
