@@ -1,4 +1,5 @@
 ﻿using Gamba.Games;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,17 +33,17 @@ namespace Gamba.Tests.Games
         [Test]
         public void GetNextDraw_Random_ValidBet()
         {
-            var randomValue = Enumerable.Range(1, 25).ToList();
-            var results = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3, 5, 5, 5, 5, 10, 10, 20 };
+            var randomToResults = new (int Random, int Result)[] { (1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1), (7, 1), (8, 1), (9, 1), (10, 1),
+                (11, 1), (12, 1), (13, 3), (14, 3), (15, 3),(16, 3), (17, 3), (18, 3), (19, 5), (20, 5),(21, 5), (22, 5), (23, 10), (24, 10), (25, 20)};
 
-            for (var i = 0; i < randomValue.Count(); i++)
+            for (var i = 0; i < randomToResults.Count(); i++)
             {
                 _randomMock.Reset();
-                _randomMock.Setup(r => r.Next(It.IsAny<int>(), It.IsAny<int>())).Returns(randomValue[i]);
+                _randomMock.Setup(r => r.Next(It.IsAny<int>(), It.IsAny<int>())).Returns(randomToResults[i].Random);
 
                 var result = _roulette.GetNextDraw();
 
-                Assert.That(result, Is.EqualTo(results[i]), $"i: {i} Random: {randomValue[i]} - Result: {result}", new int[] { randomValue[i] });
+                Assert.That(result, Is.EqualTo(randomToResults[i].Result), $"i: {i} Random: {randomToResults[i].Random} - Result: {result}", new int[] { randomToResults[i].Random });
             }
         }
 
@@ -63,14 +64,13 @@ namespace Gamba.Tests.Games
         [Test]
         public void GetWinReturn_Draw_ReturnsResult()
         {
-            var draws = new int[] { 1, 3, 5, 10, 20 };
-            var results = new int[] { 2, 4, 6, 11, 21 };
-
-            for (var i = 0; i < draws.Count(); i++)
+            var drawsToResults = new (int Draw, int Result)[] { (1, 2), (3, 4), (5, 6), (10, 11), (20, 21) };
+            
+            for (var i = 0; i < drawsToResults.Count(); i++)
             {
-                var result = _roulette.GetWinReturn(draws[i]);
+                var result = _roulette.GetWinReturn(drawsToResults[i].Draw);
 
-                Assert.That(result, Is.EqualTo(results[i]), $"i: {i} Draw: {draws[i]} - Result: {result}", new int[] { draws[i] });
+                Assert.That(result, Is.EqualTo(drawsToResults[i].Result), $"i: {i} Draw: {drawsToResults[i].Draw} - Result: {result}", new int[] { drawsToResults[i].Draw });
             }
         }
     }
