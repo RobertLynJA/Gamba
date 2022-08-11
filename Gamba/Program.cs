@@ -1,80 +1,49 @@
-﻿namespace Gamba
+﻿using Gamba.Games;
+
+namespace Gamba
 {
     internal class Program
     {
         static void Main(string[] args)
         {
-            var dictionary = new Dictionary<int, long>();
-            dictionary.Add(1, 0);
-            dictionary.Add(3, 0);
-            dictionary.Add(5, 0);
-            dictionary.Add(10, 0);
-            dictionary.Add(20, 0);
-
-            var wallet = 10000;
-            var roulette = new Games.RouletteWheel();
-            var max = int.MinValue;
-            var min = int.MaxValue;
+            var roulette = new Games.Roulette(10000);
             var bet = 10;
-            var lastWin = true;
-            var count = 1;
-
-            var setRanges = () =>
+            
+            while (roulette.Wallet >= 10)
             {
-                max = Math.Max(max, wallet);
-                min = Math.Min(min, wallet);
-            };
-
-            setRanges();
-
-            while (wallet >= 10)
-            {
-                var result = roulette.GetNextDraw();
-                dictionary[result]++;
-                var draw = 1;
-                var win = 0;
-
-                if (lastWin)
+                if (roulette.TotalDraws == 0 || roulette.LastResult.Won)
                 {
                     bet = 10;
                 }
-                else if (bet * 2 <= wallet)
-                //else if (bet + 10 <= wallet)
+                else if (bet * 2 <= roulette.Wallet)
                 {
                     bet *= 2;
-                    //bet += 10;
                 }
 
-                while (bet > wallet && bet >= 10)
+                while (bet > roulette.Wallet && bet >= 10)
                 {
                     bet /= 2;
-                    //bet -= 10;
                 }
 
-                if (bet > wallet)
+                if (bet > roulette.Wallet)
+                {
+                    Console.WriteLine($"{bet} {roulette.Wallet}");
                     break;
-
-                if (result == draw)
-                {
-                    win = roulette.GetWinReturn(draw) * bet;
-                    lastWin = true;
-                }
-                else
-                {
-                    lastWin = false;
                 }
 
-                wallet -= bet;
-                wallet += win;
+                var result = roulette.Bet(Games.Draw.One, bet);
 
-                setRanges();
-                Console.WriteLine($"{count++}. Rolled: {result,2} - Winnings: {win,5} - Bet: {-bet,6} - Wallet: {wallet} - Min/Max: {min}|{max}");
-                //System.Threading.Thread.Sleep(10);
+                Console.WriteLine($"{roulette.TotalDraws}. Rolled: {(int)result.Roll,2} - Bet {(int)result.Bet,2} - Winnings: {result.AmountWon,5} - Wager: {result.Wager,6} - Wallet: {result.CurrentWallet,7} - Wallet Min|Max: {roulette.MinWallet}|{roulette.MaxWallet}");
+
+                //System.Threading.Thread.Sleep(1000);
             }
 
-            foreach (var val in dictionary.Keys)
+            Console.WriteLine(" ------------- RESULTS -------------");
+            Console.WriteLine($"Wins: {roulette.TotalWins} Losses: {roulette.TotalLosses} Total: {roulette.TotalDraws}");
+
+            foreach (var draw in (Draw[])Enum.GetValues(typeof(Draw)))
             {
-                Console.WriteLine($"{val}: {dictionary[val] / ((double)count-1)}");
+                Console.WriteLine($"{(int)draw,2} - {((roulette.GetTotalDraws(draw) / (double)roulette.TotalDraws) * 100),6:F2}");
             }
         }
     }
