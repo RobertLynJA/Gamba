@@ -6,23 +6,26 @@ namespace Gamba
     {
         static void Main(string[] args)
         {
-            var roulette = new Games.Roulette(10000);
-            var bet = 10;
+            var startingCurrency = 10000;
+            var minBet = 10;
+            var roulette = new Games.Roulette(startingCurrency);
+            var bet = minBet;
+            var betMultiplier = 2;
             
             while (roulette.Wallet >= 10)
             {
                 if (roulette.TotalDraws == 0 || roulette.LastResult.Won)
                 {
-                    bet = 10;
+                    bet = minBet;
                 }
-                else if (bet * 2 <= roulette.Wallet)
+                else if (bet * betMultiplier <= roulette.Wallet)
                 {
-                    bet *= 2;
+                    bet *= betMultiplier;
                 }
 
-                while (bet > roulette.Wallet && bet >= 10)
+                while (bet > roulette.Wallet && bet >= minBet)
                 {
-                    bet /= 2;
+                    bet /= betMultiplier;
                 }
 
                 if (bet > roulette.Wallet)
