@@ -13,11 +13,11 @@ Wheel:
   -  2 #10s
   -  1 #20
 -  Payouts
-  -  #1  ->  2x
-  -  #3  ->  4x
-  -  #5  ->  6x
-  -  #10 -> 11x
-  -  #20 -> 21x
+    -  #1  ->  2x
+    -  #3  ->  4x
+    -  #5  ->  6x
+    -  #10 -> 11x
+    -  #20 -> 21x
 
 Takeaway: House always wins, don't gamble.
 
