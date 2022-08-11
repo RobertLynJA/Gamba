@@ -8,50 +8,45 @@ namespace Gamba.Games
 {
     public class Roulette
     {
-        private Random _random;
-        private int[] _bets;
+        private int _wallet;
+        private RouletteWheel _wheel;
 
-        public Roulette(Random? random = null)
+        public Roulette(int startingCurrency, RouletteWheel? wheel = null)
         {
-            _random = random ??= new Random();
-            _bets = new int[] { 1, 3, 5, 10, 20 };
+            if (startingCurrency < 0)
+                throw new ArgumentOutOfRangeException($"{nameof(startingCurrency)} cannot be negative");
+
+            _wallet = startingCurrency;
+            _wheel = wheel ??= new RouletteWheel();
         }
 
-        public IEnumerable<int> GetValidBets()
+        public (bool win, int currentWallet, Draw roll) Bet(Draw draw, int amount)
         {
-            return _bets.ToList();
-        }
+            if (amount < _wallet)
+                throw new InvalidOperationException("Not enough currency for bet");
 
-        public int GetNextDraw()
-        {
-            var result = _random.Next(1, 26);
+            if (amount < 0)
+                throw new ArgumentOutOfRangeException($"{nameof(amount)} cannot be negative");
+    
+            var roll = _wheel.GetNextDraw();
+            var result = roll == (int)draw;
 
-            if (result <= 12) return 1;
-            if (result <= 18) return 3;
-            if (result <= 22) return 5;
-            if (result <= 24) return 10;
-            if (result <= 25) return 20;
+            _wallet -= amount;
 
-            throw new Exception("should never happen");
-        }
-
-        public int GetWinReturn(int draw)
-        {
-            switch (draw)
+            if (roll == (int)draw)
             {
-                case 1:
-                    return 2;
-                case 3:
-                    return 4;
-                case 5:
-                    return 6;
-                case 10:
-                    return 11;
-                case 20:
-                    return 21;
+                _wallet += amount * _wheel.GetWinReturn((int)draw);
             }
 
-            throw new ArgumentOutOfRangeException($"{nameof(draw)} is not a valid draw");
+            return (result, _wallet, (Draw)roll);
+        }
+
+        public int Wallet
+        {
+            get
+            {
+                return _wallet;
+            }
         }
     }
 }
