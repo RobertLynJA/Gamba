@@ -103,7 +103,7 @@ namespace Gamba.Games
             _minWallet = Math.Min(_minWallet, _wallet);
         }
 
-        public Result Bet(Draw draw, int amount)
+        public virtual Result Bet(Draw draw, int amount)
         {
             if (amount > _wallet)
                 throw new InvalidOperationException("Not enough currency for bet");
@@ -138,7 +138,7 @@ namespace Gamba.Games
             return _lastResult = new Result(result, result ? amount * _wheel.GetWinReturn((int)draw) : 0, _wallet, (Draw)roll, amount, draw);
         }
 
-        public long GetTotalDraws(Draw draw)
+        public virtual long GetTotalDraws(Draw draw)
         {
             return _drawAmounts[draw];
         }

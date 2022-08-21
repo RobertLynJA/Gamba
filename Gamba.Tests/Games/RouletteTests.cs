@@ -11,18 +11,42 @@ namespace Gamba.Tests.Games
     {
         private Roulette _roulette;
         private Mock<RouletteWheel> _rouletteWheel;
+        private Mock<Random> _randomMock;
+        private int _startingWallet = 1000;
 
         [SetUp]
         public void Setup()
         {
-            _rouletteWheel = new Mock<RouletteWheel>();
-            _roulette = new Roulette(1000, _rouletteWheel.Object);
+            _randomMock = new Mock<Random>();
+            _rouletteWheel = new Mock<RouletteWheel>(new object[] { _randomMock.Object });
+            _roulette = new Roulette(_startingWallet, _rouletteWheel.Object);
         }
 
         [Test]
-        public void Test1()
+        public void Bet_LargerThanWallet_ThrowsException()
         {
+            Assert.Throws<InvalidOperationException>(() => _roulette.Bet(Draw.One, _startingWallet + 1));
+        }
 
+        [Test(ExpectedResult = 990)]
+        public int Bet_LosingAmount_WalletDecreased()
+        {
+            _rouletteWheel.Setup(r => r.GetNextDraw()).Returns((int)Draw.Three);
+
+            _roulette.Bet(Draw.One, 10);
+
+            return _roulette.Wallet;
+        }
+
+        [Test(ExpectedResult = 1010)]
+        public int Bet_WinningAmount_WalletIncreased()
+        {
+            _rouletteWheel.Setup(r => r.GetNextDraw()).Returns((int)Draw.One);
+            _rouletteWheel.Setup(r => r.GetWinReturn((int)Draw.One)).Returns(2);
+
+            _roulette.Bet(Draw.One, 10);
+
+            return _roulette.Wallet;
         }
     }
 }

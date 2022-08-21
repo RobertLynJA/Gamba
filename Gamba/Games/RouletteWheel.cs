@@ -17,12 +17,12 @@ namespace Gamba.Games
             _bets = new int[] { 1, 3, 5, 10, 20 };
         }
 
-        public IEnumerable<int> GetValidBets()
+        public virtual IEnumerable<int> GetValidBets()
         {
             return _bets.ToList();
         }
 
-        public int GetNextDraw()
+        public virtual int GetNextDraw()
         {
             var result = _random.Next(1, 26);
 
@@ -35,7 +35,7 @@ namespace Gamba.Games
             throw new Exception("should never happen");
         }
 
-        public int GetWinReturn(int draw)
+        public virtual int GetWinReturn(int draw)
         {
             switch (draw)
             {
