@@ -12,7 +12,7 @@ namespace Gamba.Tests.Games
         private Roulette _roulette;
         private Mock<RouletteWheel> _rouletteWheel;
         private Mock<Random> _randomMock;
-        private int _startingWallet = 1000;
+        private const int _startingWallet = 1000;
 
         [SetUp]
         public void Setup()
