@@ -22,32 +22,32 @@ namespace Gamba.Games
             return _bets.ToList();
         }
 
-        public virtual int GetNextDraw()
+        public virtual Draw GetNextDraw()
         {
             var result = _random.Next(1, 26);
 
-            if (result <= 12) return 1;
-            if (result <= 18) return 3;
-            if (result <= 22) return 5;
-            if (result <= 24) return 10;
-            if (result <= 25) return 20;
+            if (result <= 12) return Draw.One;
+            if (result <= 18) return Draw.Three;
+            if (result <= 22) return Draw.Five;
+            if (result <= 24) return Draw.Ten;
+            if (result <= 25) return Draw.Twenty;
 
             throw new Exception("should never happen");
         }
 
-        public virtual int GetWinReturn(int draw)
+        public virtual int GetWinReturn(Draw draw)
         {
             switch (draw)
             {
-                case 1:
+                case Draw.One:
                     return 2;
-                case 3:
+                case Draw.Three:
                     return 4;
-                case 5:
+                case Draw.Five:
                     return 6;
-                case 10:
+                case Draw.Ten:
                     return 11;
-                case 20:
+                case Draw.Twenty:
                     return 21;
             }
 

@@ -31,7 +31,7 @@ namespace Gamba.Tests.Games
         [Test(ExpectedResult = 990)]
         public int Bet_LosingAmount_WalletDecreased()
         {
-            _rouletteWheel.Setup(r => r.GetNextDraw()).Returns((int)Draw.Three);
+            _rouletteWheel.Setup(r => r.GetNextDraw()).Returns(Draw.Three);
 
             _roulette.Bet(Draw.One, 10);
 
@@ -41,8 +41,8 @@ namespace Gamba.Tests.Games
         [Test(ExpectedResult = 1010)]
         public int Bet_WinningAmount_WalletIncreased()
         {
-            _rouletteWheel.Setup(r => r.GetNextDraw()).Returns((int)Draw.One);
-            _rouletteWheel.Setup(r => r.GetWinReturn((int)Draw.One)).Returns(2);
+            _rouletteWheel.Setup(r => r.GetNextDraw()).Returns(Draw.One);
+            _rouletteWheel.Setup(r => r.GetWinReturn(Draw.One)).Returns(2);
 
             _roulette.Bet(Draw.One, 10);
 

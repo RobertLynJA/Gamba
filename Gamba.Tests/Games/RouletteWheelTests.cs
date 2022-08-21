@@ -33,8 +33,8 @@ namespace Gamba.Tests.Games
         [Test]
         public void GetNextDraw_Random_ValidBet()
         {
-            var randomToResults = new (int Random, int Result)[] { (1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1), (7, 1), (8, 1), (9, 1), (10, 1),
-                (11, 1), (12, 1), (13, 3), (14, 3), (15, 3),(16, 3), (17, 3), (18, 3), (19, 5), (20, 5),(21, 5), (22, 5), (23, 10), (24, 10), (25, 20)};
+            var randomToResults = new (int Random, Draw Result)[] { (1, Draw.One), (2, Draw.One), (3, Draw.One), (4, Draw.One), (5, Draw.One), (6, Draw.One), (7, Draw.One), (8, Draw.One), (9, Draw.One), (10, Draw.One),
+                (11, Draw.One), (12, Draw.One), (13, Draw.Three), (14, Draw.Three), (15, Draw.Three),(16, Draw.Three), (17, Draw.Three), (18, Draw.Three), (19, Draw.Five), (20, Draw.Five),(21, Draw.Five), (22, Draw.Five), (23, Draw.Ten), (24, Draw.Ten), (25, Draw.Twenty)};
 
             for (var i = 0; i < randomToResults.Count(); i++)
             {
@@ -64,13 +64,13 @@ namespace Gamba.Tests.Games
         [Test]
         public void GetWinReturn_Draw_ReturnsResult()
         {
-            var drawsToResults = new (int Draw, int Result)[] { (1, 2), (3, 4), (5, 6), (10, 11), (20, 21) };
+            var drawsToResults = new (Draw Draw, int Result)[] { (Draw.One, 2), (Draw.Three, 4), (Draw.Five, 6), (Draw.Ten, 11), (Draw.Twenty, 21) };
             
             for (var i = 0; i < drawsToResults.Count(); i++)
             {
                 var result = _roulette.GetWinReturn(drawsToResults[i].Draw);
 
-                Assert.That(result, Is.EqualTo(drawsToResults[i].Result), $"i: {i} Draw: {drawsToResults[i].Draw} - Result: {result}", new int[] { drawsToResults[i].Draw });
+                Assert.That(result, Is.EqualTo(drawsToResults[i].Result), $"i: {i} Draw: {drawsToResults[i].Draw} - Result: {result}", new Draw[] { drawsToResults[i].Draw });
             }
         }
     }

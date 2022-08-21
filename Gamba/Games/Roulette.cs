@@ -112,15 +112,15 @@ namespace Gamba.Games
                 throw new ArgumentOutOfRangeException($"{nameof(amount)} cannot be negative");
 
             var roll = _wheel.GetNextDraw();
-            var result = roll == (int)draw;
+            var result = roll == draw;
 
             _drawAmounts[(Draw)roll]++;
 
             _wallet -= amount;
 
-            if (roll == (int)draw)
+            if (roll == draw)
             {
-                _wallet += amount * _wheel.GetWinReturn((int)draw);
+                _wallet += amount * _wheel.GetWinReturn(draw);
             }
 
             if (result)
@@ -135,7 +135,7 @@ namespace Gamba.Games
             SetMaxAndMin();
             _totalDraws++;
 
-            return _lastResult = new Result(result, result ? amount * _wheel.GetWinReturn((int)draw) : 0, _wallet, (Draw)roll, amount, draw);
+            return _lastResult = new Result(result, result ? amount * _wheel.GetWinReturn(draw) : 0, _wallet, (Draw)roll, amount, draw);
         }
 
         public virtual long GetTotalDraws(Draw draw)
