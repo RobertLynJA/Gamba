@@ -30,21 +30,38 @@ namespace Gamba.Tests.Games
             CollectionAssert.AreEqual(expected, actual);
         }
 
-        [Test]
-        public void GetNextDraw_Random_ValidBet()
+        [TestCase(1, ExpectedResult = Draw.One)]
+        [TestCase(2, ExpectedResult = Draw.One)]
+        [TestCase(3, ExpectedResult = Draw.One)]
+        [TestCase(4, ExpectedResult = Draw.One)]
+        [TestCase(5, ExpectedResult = Draw.One)]
+        [TestCase(6, ExpectedResult = Draw.One)]
+        [TestCase(7, ExpectedResult = Draw.One)]
+        [TestCase(8, ExpectedResult = Draw.One)]
+        [TestCase(9, ExpectedResult = Draw.One)]
+        [TestCase(10, ExpectedResult = Draw.One)]
+        [TestCase(11, ExpectedResult = Draw.One)]
+        [TestCase(12, ExpectedResult = Draw.One)]
+        [TestCase(13, ExpectedResult = Draw.Three)]
+        [TestCase(14, ExpectedResult = Draw.Three)]
+        [TestCase(15, ExpectedResult = Draw.Three)]
+        [TestCase(16, ExpectedResult = Draw.Three)]
+        [TestCase(17, ExpectedResult = Draw.Three)]
+        [TestCase(18, ExpectedResult = Draw.Three)]
+        [TestCase(19, ExpectedResult = Draw.Five)]
+        [TestCase(20, ExpectedResult = Draw.Five)]
+        [TestCase(21, ExpectedResult = Draw.Five)]
+        [TestCase(22, ExpectedResult = Draw.Five)]
+        [TestCase(23, ExpectedResult = Draw.Ten)]
+        [TestCase(24, ExpectedResult = Draw.Ten)]
+        [TestCase(25, ExpectedResult = Draw.Twenty)]
+        public Draw GetNextDraw_Random_ValidBet(int randomValue)
         {
-            var randomToResults = new (int Random, Draw Result)[] { (1, Draw.One), (2, Draw.One), (3, Draw.One), (4, Draw.One), (5, Draw.One), (6, Draw.One), (7, Draw.One), (8, Draw.One), (9, Draw.One), (10, Draw.One),
-                (11, Draw.One), (12, Draw.One), (13, Draw.Three), (14, Draw.Three), (15, Draw.Three),(16, Draw.Three), (17, Draw.Three), (18, Draw.Three), (19, Draw.Five), (20, Draw.Five),(21, Draw.Five), (22, Draw.Five), (23, Draw.Ten), (24, Draw.Ten), (25, Draw.Twenty)};
+            _randomMock.Setup(r => r.Next(It.IsAny<int>(), It.IsAny<int>())).Returns(randomValue);
 
-            for (var i = 0; i < randomToResults.Count(); i++)
-            {
-                _randomMock.Reset();
-                _randomMock.Setup(r => r.Next(It.IsAny<int>(), It.IsAny<int>())).Returns(randomToResults[i].Random);
+            var result = _roulette.GetNextDraw();
 
-                var result = _roulette.GetNextDraw();
-
-                Assert.That(result, Is.EqualTo(randomToResults[i].Result), $"i: {i} Random: {randomToResults[i].Random} - Result: {result}", new int[] { randomToResults[i].Random });
-            }
+            return result;
         }
 
         [Test]
@@ -61,17 +78,16 @@ namespace Gamba.Tests.Games
             Assert.Throws<ArgumentOutOfRangeException>(() => _roulette.GetWinReturn(0));
         }
 
-        [Test]
-        public void GetWinReturn_Draw_ReturnsResult()
+        [TestCase(Draw.One, ExpectedResult = 2)]
+        [TestCase(Draw.Three, ExpectedResult = 4)]
+        [TestCase(Draw.Five, ExpectedResult = 6)]
+        [TestCase(Draw.Ten, ExpectedResult = 11)]
+        [TestCase(Draw.Twenty, ExpectedResult = 21)]
+        public int GetWinReturn_Draw_ReturnsResult(Draw draw)
         {
-            var drawsToResults = new (Draw Draw, int Result)[] { (Draw.One, 2), (Draw.Three, 4), (Draw.Five, 6), (Draw.Ten, 11), (Draw.Twenty, 21) };
-            
-            for (var i = 0; i < drawsToResults.Count(); i++)
-            {
-                var result = _roulette.GetWinReturn(drawsToResults[i].Draw);
+            var result = _roulette.GetWinReturn(draw);
 
-                Assert.That(result, Is.EqualTo(drawsToResults[i].Result), $"i: {i} Draw: {drawsToResults[i].Draw} - Result: {result}", new Draw[] { drawsToResults[i].Draw });
-            }
+            return result;
         }
     }
 }
