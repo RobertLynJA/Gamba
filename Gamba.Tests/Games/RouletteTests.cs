@@ -38,11 +38,11 @@ namespace Gamba.Tests.Games
             return _roulette.Wallet;
         }
 
-        [Test(ExpectedResult = 1010)]
+        [Test(ExpectedResult = 1040)]
         public int Bet_WinningAmount_WalletIncreased()
         {
             _rouletteWheel.Setup(r => r.GetNextDraw()).Returns(Draw.One);
-            _rouletteWheel.Setup(r => r.GetWinReturn(Draw.One)).Returns(2);
+            _rouletteWheel.Setup(r => r.GetWinReturn(Draw.One)).Returns(5);
 
             _roulette.Bet(Draw.One, 10);
 
