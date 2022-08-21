@@ -9,15 +9,9 @@ namespace Gamba.Games
     public class Roulette
     {
         #region "Fields"
-        private int _wallet;
         private RouletteWheel _wheel;
-        private int _maxWallet;
-        private int _minWallet;
-        private Dictionary<Draw, long> _drawAmounts = new Dictionary<Draw, long>();
-        private long _totalDraws = 0;
-        private long _totalLosses = 0;
-        private long _totalWins = 0;
         private Result? _lastResult;
+        private RouletteStats _stats;
         #endregion
 
         #region "Properties"        
@@ -25,7 +19,7 @@ namespace Gamba.Games
         {
             get
             {
-                return _wallet;
+                return _stats.Wallet;
             }
         }
 
@@ -33,7 +27,7 @@ namespace Gamba.Games
         {
             get
             {
-                return _minWallet;
+                return _stats.MinWallet;
             }
         }
 
@@ -41,7 +35,7 @@ namespace Gamba.Games
         {
             get
             {
-                return _maxWallet;
+                return _stats.MaxWallet;
             }
         }
 
@@ -49,7 +43,7 @@ namespace Gamba.Games
         {
             get
             {
-                return _totalDraws;
+                return _stats.TotalDraws;
             }
         }
 
@@ -57,7 +51,7 @@ namespace Gamba.Games
         {
             get
             {
-                return _totalWins;
+                return _stats.TotalWins;
             }
         }
 
@@ -65,7 +59,7 @@ namespace Gamba.Games
         {
             get
             {
-                return _totalLosses;
+                return _stats.TotalLosses;
             }
         }
 
@@ -81,31 +75,18 @@ namespace Gamba.Games
         }
         #endregion
 
-        public Roulette(int startingCurrency, RouletteWheel? wheel = null)
+        public Roulette(int startingCurrency, RouletteWheel? wheel = null, RouletteStats? stats = null)
         {
             if (startingCurrency < 0)
                 throw new ArgumentOutOfRangeException($"{nameof(startingCurrency)} cannot be negative");
 
-            _wallet = startingCurrency;
             _wheel = wheel ??= new RouletteWheel();
-            _maxWallet = startingCurrency;
-            _minWallet = startingCurrency;
-
-            foreach (var draw in (Draw[])Enum.GetValues(typeof(Draw)))
-            {
-                _drawAmounts[draw] = 0;
-            }
-        }
-
-        private void SetMaxAndMin()
-        {
-            _maxWallet = Math.Max(_maxWallet, _wallet);
-            _minWallet = Math.Min(_minWallet, _wallet);
+            _stats = stats ??= new RouletteStats(startingCurrency);
         }
 
         public virtual Result Bet(Draw draw, int amount)
         {
-            if (amount > _wallet)
+            if (amount > _stats.Wallet)
                 throw new InvalidOperationException("Not enough currency for bet");
 
             if (amount < 0)
@@ -113,34 +94,16 @@ namespace Gamba.Games
 
             var roll = _wheel.GetNextDraw();
             var result = roll == draw;
+            var winReturn = _wheel.GetWinReturn(draw);
 
-            _drawAmounts[(Draw)roll]++;
+            _stats.AddBet(result, roll, amount, winReturn);
 
-            _wallet -= amount;
-
-            if (roll == draw)
-            {
-                _wallet += amount * _wheel.GetWinReturn(draw);
-            }
-
-            if (result)
-            {
-                _totalWins++;
-            }
-            else
-            {
-                _totalLosses++;
-            }
-
-            SetMaxAndMin();
-            _totalDraws++;
-
-            return _lastResult = new Result(result, result ? amount * _wheel.GetWinReturn(draw) : 0, _wallet, (Draw)roll, amount, draw);
+            return _lastResult = new Result(result, result ? amount * _wheel.GetWinReturn(draw) : 0, _stats.Wallet, (Draw)roll, amount, draw);
         }
 
         public virtual long GetTotalDraws(Draw draw)
         {
-            return _drawAmounts[draw];
+            return _stats.GetTotalDraws(draw);
         }
 
         #region "Result"
