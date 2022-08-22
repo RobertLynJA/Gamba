@@ -40,8 +40,10 @@ namespace Gamba
                 //System.Threading.Thread.Sleep(1000);
             }
 
+            Console.WriteLine();
             Console.WriteLine(" ------------- RESULTS -------------");
             Console.WriteLine($"Wins: {roulette.TotalWins} Losses: {roulette.TotalLosses} Total: {roulette.TotalDraws}");
+            Console.WriteLine($"Wallet Maximum: {roulette.MaxWallet:C} ");
 
             foreach (var draw in (Draw[])Enum.GetValues(typeof(Draw)))
             {
