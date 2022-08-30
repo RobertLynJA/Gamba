@@ -59,8 +59,11 @@ internal class RouletteStatsTests
         _stats.AddBet(true, Draw.One, 20, 1);
         _stats.AddBet(false, Draw.One, 20, 1);
 
-        Assert.That(_stats.TotalWins, Is.EqualTo(2));
-        Assert.That(_stats.TotalLosses, Is.EqualTo(1));
-        Assert.That(_stats.TotalDraws, Is.EqualTo(3));
+        Assert.Multiple(() =>
+        {
+            Assert.That(_stats.TotalWins, Is.EqualTo(2));
+            Assert.That(_stats.TotalLosses, Is.EqualTo(1));
+            Assert.That(_stats.TotalDraws, Is.EqualTo(3));
+        });
     }
 }
