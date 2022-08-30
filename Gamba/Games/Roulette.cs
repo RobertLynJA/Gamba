@@ -9,9 +9,9 @@ namespace Gamba.Games;
 public class Roulette
 {
     #region "Fields"
-    private RouletteWheel _wheel;
+    private readonly RouletteWheel _wheel;
     private Result? _lastResult;
-    private RouletteStats _stats;
+    private readonly RouletteStats _stats;
     #endregion
 
     #region "Properties"        
@@ -78,10 +78,10 @@ public class Roulette
     public Roulette(int startingCurrency, RouletteWheel? wheel = null, RouletteStats? stats = null)
     {
         if (startingCurrency < 0)
-            throw new ArgumentOutOfRangeException($"{nameof(startingCurrency)} cannot be negative");
+            throw new ArgumentOutOfRangeException($"{nameof(startingCurrency)}", "Parameter cannot be negative");
 
-        _wheel = wheel ??= new RouletteWheel();
-        _stats = stats ??= new RouletteStats(startingCurrency);
+        _wheel = wheel ?? new RouletteWheel();
+        _stats = stats ?? new RouletteStats(startingCurrency);
     }
 
     public virtual Result Bet(Draw draw, int amount)
@@ -90,7 +90,7 @@ public class Roulette
             throw new InvalidOperationException("Not enough currency for bet");
 
         if (amount < 0)
-            throw new ArgumentOutOfRangeException($"{nameof(amount)} cannot be negative");
+            throw new ArgumentOutOfRangeException($"{nameof(amount)}", "Parameter cannot be negative");
 
         var roll = _wheel.GetNextDraw();
         var result = roll == draw;
