@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Gamba.Games;
+﻿namespace Gamba.Games;
 
 public class RouletteStats
 {
     private int _maxWallet;
     private int _minWallet;
-    private Dictionary<Draw, long> _drawAmounts = new Dictionary<Draw, long>();
+    private readonly Dictionary<Draw, long> _drawAmounts = new();
     private long _totalDraws = 0;
     private long _totalLosses = 0;
     private long _totalWins = 0;
