@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Gamba.Games;
+﻿namespace Gamba.Games;
 
 public class Roulette
 {
@@ -107,7 +101,7 @@ public class Roulette
     }
 
     #region "Result"
-    public class Result 
+    public class Result
     {
         public readonly bool Won;
         public readonly int AmountWon;
