@@ -7,7 +7,7 @@ public class RouletteWheel
 
     public RouletteWheel(Random? random = null)
     {
-        _random = random ??= new Random();
+        _random = random ?? new Random();
         _bets = new int[] { 1, 3, 5, 10, 20 };
     }
 
@@ -45,6 +45,6 @@ public class RouletteWheel
                 return 21;
         }
 
-        throw new ArgumentOutOfRangeException($"{nameof(draw)} is not a valid draw");
+        throw new ArgumentOutOfRangeException(nameof(draw), "Not a valid draw");
     }
 }
