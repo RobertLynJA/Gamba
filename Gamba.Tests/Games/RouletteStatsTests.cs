@@ -82,4 +82,10 @@ internal class RouletteStatsTests
 
         Assert.That(_stats.MinWallet, Is.EqualTo(_startingWallet - (2 * bet)));
     }
+
+    [Test]
+    public void Failure()
+    {
+        Assert.Fail();
+    }
 }
