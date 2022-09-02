@@ -61,4 +61,25 @@ internal class RouletteStatsTests
             Assert.That(_stats.TotalDraws, Is.EqualTo(3));
         });
     }
+
+    [Test]
+    public void AddBet_Win_IncreaseMaxWallet()
+    {
+        var bet = 20;
+        var winReturn = 3;
+        _stats.AddBet(true, Draw.One, bet, winReturn);
+        _stats.AddBet(true, Draw.One, bet, winReturn);
+
+        Assert.That(_stats.MaxWallet, Is.EqualTo(_startingWallet - (2 * bet) + (2 * bet * winReturn)));
+    }
+
+    [Test]
+    public void AddBet_Loss_DecreaseMaxWallet()
+    {
+        var bet = 20;
+        _stats.AddBet(false, Draw.One, bet, 1);
+        _stats.AddBet(false, Draw.One, bet, 1);
+
+        Assert.That(_stats.MinWallet, Is.EqualTo(_startingWallet - (2 * bet)));
+    }
 }
